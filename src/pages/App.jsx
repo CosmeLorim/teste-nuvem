@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
+import styles from './App.styles'
 import { Skeleton, Alert, Row, Col } from 'antd'
 import Product from '../components/Product'
 
@@ -18,14 +19,6 @@ const fetchData = async ({ setData, setErrors, setLoading }) => {
     setErrors(err)
   }
   setLoading(false)
-}
-
-const styles = {
-  products: {
-    marginTop: '10px',
-    height: '120px',
-    boxShadow: '0px 0px 2px 2px #0000001c'
-  }
 }
 
 const App = () => {
