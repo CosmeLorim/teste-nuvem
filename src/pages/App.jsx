@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 import { Skeleton, Alert, Row, Col } from 'antd'
-import Item from '../components/Item'
+import Product from '../components/Product'
 
 // todo => mover para um arquivo de configuração, talvez usando dotenv?
 export const baseAPI = 'https://api-teste-frontend.luan-nuvem.now.sh/api'
@@ -41,16 +41,16 @@ const App = () => {
 
   if (errors) return <Alert message='Erro ao buscar dados, por favor tente novamente mais tarde.' />
 
-  const Itens = data.products.map(p => (
-    <Col style={styles.products} key={`item${p.id}`} xs={{ push: 1, span: 20, offset: 1 }} lg={{ push: 1, pull: 1, span: 10 }}>
-      <Item {...p} urlImage={p.image_url} />
+  const Products = data.products.map(p => (
+    <Col style={styles.products} key={`Product${p.id}`} xs={{ push: 1, span: 20, offset: 1 }} lg={{ push: 1, pull: 1, span: 10 }}>
+      <Product {...p} urlImage={p.image_url} />
     </Col>
   ))
 
   return (
     <div>
       <Row gutter={16}>
-        {Itens}
+        {Products}
       </Row>
     </div>
   )
