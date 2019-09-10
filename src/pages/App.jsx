@@ -16,7 +16,7 @@ const fetchData = async ({ setData, setErrors, setLoading }) => {
     const detailsOfProducts = await Promise.all(products.data.map(p => axios.get(`${baseAPI}/products/${p.id}`)))
 
     products = products.data.map((p, i) => ({ ...p, ...detailsOfProducts[i].data }))
-    setData({ products: products })
+    setData({ products })
   } catch (err) {
     setErrors(err)
   }
@@ -46,16 +46,19 @@ const App = () => {
       key={`Product${p.id}`}
       xs={{ push: 1, span: 20, offset: 1 }}
       lg={{ push: 1, pull: 1, span: 10 }}
-      onClick={handleModalAdditionalVisible}
+      onClick={() => handleModalAdditionalVisible({ product: p.id - 1 })}
     >
       <Product {...p} urlImage={p.image_url} />
     </Col>
   ))
 
+  const product = data.products[modalAdditional.product]
+  console.log({ product, data })
   return (
     <div>
       <ModalAdditional
         visible={modalAdditional.visible}
+        product={product}
         handleVisible={handleModalAdditionalVisible}
       />
       <Row gutter={16}>
