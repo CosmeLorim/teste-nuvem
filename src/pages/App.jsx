@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
+import styles from './App.styles'
 import { Skeleton, Alert, Row, Col } from 'antd'
-import Item from '../components/Item'
+
+import Product from '../components/Product'
+import ModalAdditional from '../components/modal-additional'
 
 // todo => mover para um arquivo de configuração, talvez usando dotenv?
 export const baseAPI = 'https://api-teste-frontend.luan-nuvem.now.sh/api'
@@ -13,44 +16,53 @@ const fetchData = async ({ setData, setErrors, setLoading }) => {
     const detailsOfProducts = await Promise.all(products.data.map(p => axios.get(`${baseAPI}/products/${p.id}`)))
 
     products = products.data.map((p, i) => ({ ...p, ...detailsOfProducts[i].data }))
-    setData({ products: products })
+    setData({ products })
   } catch (err) {
     setErrors(err)
   }
   setLoading(false)
 }
 
-const styles = {
-  products: {
-    marginTop: '10px',
-    height: '120px',
-    boxShadow: '0px 0px 2px 2px #0000001c'
-  }
-}
+const handleVisibleModalCurrie = ({ modal, setModal }) => ({ product = 1 }) => setModal({ visible: !modal.visible, product })
 
 const App = () => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState({ products: [] })
   const [errors, setErrors] = useState(false)
+  const [modalAdditional, setModalAddtional] = useState({ visible: false, product: 1 })
+  const handleModalAdditionalVisible = handleVisibleModalCurrie({ modal: modalAdditional, setModal: setModalAddtional })
 
   useEffect(() => {
-    fetchData({ setData, setErrors, data, setLoading })
+    fetchData({ setData, setErrors, setLoading })
   }, [])
 
   if (loading) return <Skeleton active />
 
   if (errors) return <Alert message='Erro ao buscar dados, por favor tente novamente mais tarde.' />
 
-  const Itens = data.products.map(p => (
-    <Col style={styles.products} key={`item${p.id}`} xs={{ push: 1, span: 20, offset: 1 }} lg={{ push: 1, pull: 1, span: 10 }}>
-      <Item {...p} urlImage={p.image_url} />
+  const Products = data.products.map(p => (
+    <Col
+      style={styles.products}
+      key={`Product${p.id}`}
+      xs={{ push: 1, span: 20, offset: 1 }}
+      lg={{ push: 1, pull: 1, span: 10 }}
+      onClick={() => handleModalAdditionalVisible({ product: p.id - 1 })}
+    >
+      <Product {...p} urlImage={p.image_url} />
     </Col>
   ))
 
+  const product = data.products[modalAdditional.product]
+  console.log({ product, data })
   return (
     <div>
+      <ModalAdditional
+        visible={modalAdditional.visible}
+        product={product}
+        handleVisible={handleModalAdditionalVisible}
+      />
       <Row gutter={16}>
-        {Itens}
+        {Products}
       </Row>
     </div>
   )

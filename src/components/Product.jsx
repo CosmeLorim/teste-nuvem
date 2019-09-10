@@ -3,19 +3,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Row, Col } from 'antd'
-
-const styles = {
-  row: {
-    padding: '10px'
-  },
-  price: {
-    color: 'green'
-  },
-  img: {
-    width: '100px',
-    borderRadius: '4px'
-  }
-}
+import styles from './Product.styles'
 
 const Item = ({ name, price, urlImage, altImage }) => {
   price = price.toLocaleString('pt-br', { minimumFractionDigits: 2 })
